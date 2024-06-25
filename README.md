@@ -1,23 +1,35 @@
 # IMU-mouse
 
+![](./hw_design/imu-mouse-3d-angled-ortho.png)
+
 Firmware is implemented as Zephyr based application.
 
 The board devicetree files are found under [`imu_mouse/`](./imu_mouse/).
 
+HW schematics and gerber files can be found under [`hw_design/`](./hw_design/). Full HW design KiCad project is found in separate repo: [github.com/LassiHeikkila/imu-mouse-hw](https://github.com/LassiHeikkila/imu-mouse-hw).
+
 ## Status
 
 Working:
-- buttons
-- battery level reading
-- BMA456 firmware upload
-- BMA456 data polling
-- BLE connection to host
-- Mouse click
+- [x] buttons
+- [x] battery level reading
+- [x] SPI interfaces to both sensors
+- [x] BMA456 firmware upload
+- [x] BMA456 data polling
+- [x] BLE connection to host
+- [x] Mouse click
 
 Not working yet:
-- BMA456 interrupts
-- BHI360 firmware upload
-- Cursor movement
+- [ ] BMA456 interrupts
+- [ ] BMA456 any motion / no motion feature configuration
+- [ ] BHI360 firmware upload 
+- [ ] BHI360 feature configuration
+- [ ] BHI360 interrupts
+- [ ] Cursor movement
+- [ ] BHI360 <-> BMM350 interface
+
+Should be working from SW but maybe HW issue:
+- [ ] Status RGB LED
 
 ## Pre-requisites for build
 
