@@ -1,0 +1,210 @@
+// Copyright (c) 2024 Nordic Semiconductor ASA
+// SPDX-License-Identifier: Apache-2.0
+
+/dts-v1/;
+#include <nordic/nrf52832_ciaa.dtsi>
+
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+// ANNA-B112 module, GPIO pin numbers on p.19-20 of datasheet
+
+/ {
+	model = "imu-mouse";
+	compatible = "lassiheikkila,imu-mouse";
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		// RED, GPIO36 i.e. p0.22
+		led_r: led_r {
+			gpios = <&gpio0 22 GPIO_ACTIVE_LOW>;
+			label = "Red LED";
+		};
+
+		// GREEN, GPIO37 i.e. p0.23
+		led_g: led_g {
+			gpios = <&gpio0 23 GPIO_ACTIVE_LOW>;
+			label = "Green LED";
+		};
+
+		// BLUE, GPIO38 i.e. p0.24
+		led_b: led_b {
+			gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
+			label = "Blue LED";
+		};
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+
+		// SW3, GPIO29 i.e. p0.27
+		button1: button1 {
+			gpios = <&gpio0 27 GPIO_ACTIVE_LOW>;
+			zephyr,code = <INPUT_BTN_0>;
+			label = "SW3 / Left Button";
+		};
+
+		// SW4, GPIO30 i.e. p0.25
+		button2: button2 {
+			gpios = <&gpio0 25 GPIO_ACTIVE_LOW>;
+			zephyr,code = <INPUT_BTN_1>;
+			label = "SW4 / Right Button";
+		};
+
+		// SW5, GPIO31 i.e. p0.26
+		button3: button3 {
+			gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+			zephyr,code = <INPUT_BTN_2>;
+			label = "SW5 / Middle Button";
+		};
+
+		int_bma456: int_bma456 {
+			gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+			label = "BMA456 interrupt";
+		};
+
+		int_bhi360: int_bhi360 {
+			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
+			label = "BHI360 interrupt";
+		};
+	};
+
+
+	battery_monitor: vbatt {
+		compatible = "voltage-divider";
+		io-channels = <&adc 5>;
+		output-ohms = <220000>; // 220k
+		full-ohms = <1720000>; // 1.5M + 220k = 1.72M
+		power-gpios = <&gpio0 28 0>;
+	};
+
+	zephyr,user {
+		// INT_BMA456-gpios = <&gpio0 19 GPIO_ACTIVE_LOW>;
+		// INT_BHI360-gpios = <&gpio0 2 0>;
+		RESET_BHI360-gpios = <&gpio0 20 0>;
+		SS_BMA456-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+		SS_BHI360-gpios = <&gpio0 31 GPIO_ACTIVE_LOW>;
+	};
+
+	aliases {
+		ledr = &led_r;
+		ledg = &led_g;
+		ledb = &led_b;
+		button1 = &button1;
+		button2 = &button2;
+		button3 = &button3;
+		sw3 = &button1;
+		sw4 = &button2;
+		sw5 = &button3;
+		intbma456 = &int_bma456;
+		intbhi360 = &int_bhi360;
+	};
+};
+
+&gpiote {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&pinctrl {
+
+
+	spi0_default: spi0_default {
+		group1 {
+			psels = <NRF_PSEL(SPIM_MISO, 0, 15)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 16)>,
+				<NRF_PSEL(SPIM_SCK, 0, 14)>;
+		};
+	};
+
+	spi1_default: spi1_default {
+		group1 {
+			psels = <NRF_PSEL(SPIM_SCK, 0, 3)>,
+				<NRF_PSEL(SPIM_MOSI, 0, 4)>,
+				<NRF_PSEL(SPIM_MISO, 0, 5)>;
+		};
+	};
+};
+
+&flash0 {
+	status = "okay";
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x0 0xc000>;
+		};
+		slot0_partition: partition@c000 {
+			label = "image-0";
+			reg = <0xc000 0x12000>;
+		};
+		slot1_partition: partition@1e000 {
+			label = "image-1";
+			reg = <0x1e000 0x12000>;
+		};
+		scratch_partition: partition@30000 {
+			label = "image-scratch";
+			reg = <0x30000 0xa000>;
+		};
+		storage_partition: partition@3a000 {
+			label = "storage";
+			reg = <0x3a000 0x6000>;
+		};
+	};
+};
+
+spi0: &spi0 {
+	status = "okay";
+	pinctrl-0 = <&spi0_default>;
+	pinctrl-names = "default";
+	compatible = "nordic,nrf-spim";
+	max-frequency = <DT_FREQ_M(8)>;
+};
+
+spi1: &spi1 {
+	status = "okay";
+	pinctrl-0 = <&spi1_default>;
+	pinctrl-names = "default";
+	compatible = "nordic,nrf-spim";
+};
+
+&adc {
+	status = "okay";
+};
+
+&wdt {
+	status = "okay";
+};
+
+&rng {
+	status = "okay";
+};
+
+&ecb {
+	status = "okay";
+};
+
+&ccm {
+	status = "okay";
+};
+
+&bprot {
+	status = "disabled";
+};
+
+&nfct {
+	status = "disabled";
+};
+
