@@ -14,7 +14,7 @@
 // Measure battery level every 10 minutes
 #define MS_BETWEEN_BATTERY_READINGS (10 * 60 * 1000)
 
-#define BATTERY_ENABLE_TASK 0
+#define BATTERY_ENABLE_TASK 1
 
 /** Enable or disable measurement of the battery voltage.
  *

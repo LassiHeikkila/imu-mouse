@@ -20,7 +20,7 @@
 #define ROUND_TO_NEAREST_4_UP(x) (((x + 3) >> 2) << 2)
 #define ROUND_TO_NEAREST_4_DOWN(x) (((x) >> 2) << 2)
 
-#define BHI360_ENABLE_POLL_TASK 1
+#define BHI360_ENABLE_POLL_TASK 0
 
 typedef struct
 {

@@ -33,6 +33,7 @@
 
 #include "battery.h"
 #include "buttons.h"
+#include "mouse.h"
 
 LOG_MODULE_REGISTER(mouse);
 
@@ -879,8 +880,6 @@ int mouse_task(void) {
         bas_notify();
     }
 }
-
-// SYS_INIT(initialize_mouse, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
 #if MOUSE_ENABLE_TASK == 1
 

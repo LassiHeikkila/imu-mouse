@@ -14,7 +14,7 @@
 
 #define BMA456_CONFIG_FILE_SIZE_BYTES 1200
 
-#define BMA456_ENABLE_POLL_TASK 0
+#define BMA456_ENABLE_POLL_TASK 1
 
 /* Init function for setting up MCU side of things and configuring sensor */
 int initialize_bma456(void);

@@ -7,7 +7,7 @@
 #define BUTTON_R DT_ALIAS(sw4)
 #define BUTTON_M DT_ALIAS(sw5)
 
-#define BUTTON_ENABLE_POLL_TASK 0
+#define BUTTON_ENABLE_POLL_TASK 1
 
 // Enums and typedefs
 

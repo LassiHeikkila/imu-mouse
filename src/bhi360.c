@@ -1076,7 +1076,7 @@ void bhi360_write_parameter(uint16_t id, uint16_t len, uint8_t *data) {
 
 void bhi360_dump_rotation_config(void) { bhi360_read_parameter(0x126); }
 
-SYS_INIT(initialize_bhi360, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
+// SYS_INIT(initialize_bhi360, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
 #if BHI360_ENABLE_POLL_TASK == 1
 void bhi360_poll_task(void *, void *, void *) {
